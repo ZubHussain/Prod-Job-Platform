@@ -1,0 +1,22 @@
+{
+  "name": "jobnova-api-gateway",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "nodemon src/index.js",
+    "start": "node src/index.js"
+  },
+  "dependencies": {
+    "cors": "latest",
+    "dotenv": "latest",
+    "express": "latest",
+    "express-http-proxy": "latest",
+    "helmet": "latest",
+    "jsonwebtoken": "latest",
+    "morgan": "latest",
+    "express-rate-limit": "latest"
+  },
+  "devDependencies": {
+    "nodemon": "latest"
+  }
+}

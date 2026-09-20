@@ -1,0 +1,11 @@
+import { Router } from "express";
+import { createJob, listJobs, getJob, updateJob, deleteJob, myJobs, recommended } from "../controllers/jobController.js";
+const router = Router();
+router.get("/", listJobs);
+router.get("/recommended", recommended);
+router.get("/mine", myJobs);
+router.post("/", createJob);
+router.get("/:id", getJob);
+router.put("/:id", updateJob);
+router.delete("/:id", deleteJob);
+export default router;

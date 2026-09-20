@@ -1,0 +1,108 @@
+services:
+  mongo:
+    image: mongo:7
+    container_name: jobnova-mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+
+  redis:
+    image: redis:7-alpine
+    container_name: jobnova-redis
+    ports:
+      - "6379:6379"
+
+  zookeeper:
+    image: confluentinc/cp-zookeeper:7.6.1
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+
+  kafka:
+    image: confluentinc/cp-kafka:7.6.1
+    depends_on:
+      - zookeeper
+    ports:
+      - "9092:9092"
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:29092,PLAINTEXT_HOST://localhost:9092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+
+  api-gateway:
+    build: ./api-gateway
+    ports:
+      - "8080:8080"
+    env_file: ./api-gateway/.env.example
+    depends_on:
+      - auth-service
+      - user-service
+      - job-service
+      - application-service
+      - ai-service
+
+  auth-service:
+    build: ./auth-service
+    ports:
+      - "4001:4001"
+    env_file: ./auth-service/.env.example
+    depends_on:
+      - mongo
+      - kafka
+
+  user-service:
+    build: ./user-service
+    ports:
+      - "4002:4002"
+    env_file: ./user-service/.env.example
+    depends_on:
+      - mongo
+      - kafka
+
+  job-service:
+    build: ./job-service
+    ports:
+      - "4003:4003"
+    env_file: ./job-service/.env.example
+    depends_on:
+      - mongo
+      - redis
+      - kafka
+
+  application-service:
+    build: ./application-service
+    ports:
+      - "4004:4004"
+    env_file: ./application-service/.env.example
+    depends_on:
+      - mongo
+      - kafka
+
+  ai-service:
+    build: ./ai-service
+    ports:
+      - "4005:4005"
+    env_file: ./ai-service/.env.example
+
+  notification-service:
+    build: ./notification-service
+    ports:
+      - "4006:4006"
+    env_file: ./notification-service/.env.example
+    depends_on:
+      - mongo
+      - kafka
+
+  frontend:
+    build: ./frontend
+    ports:
+      - "5173:80"
+    depends_on:
+      - api-gateway
+
+volumes:
+  mongo-data:

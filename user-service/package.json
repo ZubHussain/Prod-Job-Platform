@@ -1,0 +1,22 @@
+{
+  "name": "jobnova-user-service",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "nodemon src/index.js",
+    "start": "node src/index.js"
+  },
+  "dependencies": {
+    "cloudinary": "latest",
+    "cors": "latest",
+    "dotenv": "latest",
+    "express": "latest",
+    "mongoose": "latest",
+    "multer": "latest",
+    "streamifier": "latest",
+    "kafkajs": "latest"
+  },
+  "devDependencies": {
+    "nodemon": "latest"
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "name": "jobnova-ai-service",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "nodemon src/index.js",
+    "start": "node src/index.js"
+  },
+  "dependencies": {
+    "cors": "latest",
+    "dotenv": "latest",
+    "express": "latest",
+    "multer": "latest",
+    "openai": "latest",
+    "pdf-parse": "latest",
+    "mammoth": "latest"
+  },
+  "devDependencies": {
+    "nodemon": "latest"
+  }
+}

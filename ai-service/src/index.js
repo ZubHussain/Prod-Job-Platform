@@ -1,0 +1,10 @@
+import "dotenv/config";
+import express from "express";
+import cors from "cors";
+import routes from "./routes/aiRoutes.js";
+const app = express();
+app.use(cors());
+app.use(express.json({ limit: "4mb" }));
+app.get("/health", (_req,res)=>res.json({service:"ai-service",status:"ok"}));
+app.use("/", routes);
+app.listen(process.env.PORT || 4005, ()=>console.log("AI service running"));

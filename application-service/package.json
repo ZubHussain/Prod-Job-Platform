@@ -1,0 +1,19 @@
+{
+  "name": "jobnova-application-service",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "nodemon src/index.js",
+    "start": "node src/index.js"
+  },
+  "dependencies": {
+    "cors": "latest",
+    "dotenv": "latest",
+    "express": "latest",
+    "mongoose": "latest",
+    "kafkajs": "latest"
+  },
+  "devDependencies": {
+    "nodemon": "latest"
+  }
+}

@@ -1,6 +1,9 @@
 node_modules
 .env
-.env.example
+..env
+.env.*
+**/.env
+**/.env.*
 dist
 build
 coverage

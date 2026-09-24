@@ -1,11 +1,4 @@
 services:
-  mongo:
-    image: mongo:7
-    container_name: jobnova-mongo
-    ports:
-      - "27017:27017"
-    volumes:
-      - mongo-data:/data/db
 
   redis:
     image: redis:7-alpine
@@ -51,7 +44,6 @@ services:
       - "4001:4001"
     env_file: ./auth-service/.env.example
     depends_on:
-      - mongo
       - kafka
 
   user-service:
@@ -60,7 +52,6 @@ services:
       - "4002:4002"
     env_file: ./user-service/.env.example
     depends_on:
-      - mongo
       - kafka
 
   job-service:
@@ -69,7 +60,6 @@ services:
       - "4003:4003"
     env_file: ./job-service/.env.example
     depends_on:
-      - mongo
       - redis
       - kafka
 
@@ -79,7 +69,6 @@ services:
       - "4004:4004"
     env_file: ./application-service/.env.example
     depends_on:
-      - mongo
       - kafka
 
   ai-service:
@@ -94,7 +83,6 @@ services:
       - "4006:4006"
     env_file: ./notification-service/.env.example
     depends_on:
-      - mongo
       - kafka
 
   frontend:
@@ -103,6 +91,3 @@ services:
       - "5173:80"
     depends_on:
       - api-gateway
-
-volumes:
-  mongo-data:

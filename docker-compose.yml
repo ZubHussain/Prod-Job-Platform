@@ -111,3 +111,23 @@ services:
       - "5173:80"
     depends_on:
       - api-gateway
+
+  job-ingestion-service:
+    build: ./job-ingestion-service
+    env_file:
+      - ./job-ingestion-service/.env
+    depends_on:
+      - kafka
+    ports:
+      - "5007:5007"
+    restart: unless-stopped
+
+  job-digestion-service:
+    build: ./job-digestion-service
+    env_file:
+      - ./job-digestion-service/.env
+    depends_on:
+      - kafka
+    ports:
+      - "5008:5008"
+    restart: unless-stopped

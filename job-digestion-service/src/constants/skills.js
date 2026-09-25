@@ -1,0 +1,22 @@
+export const SKILL_ALIASES = {
+  java: ["java"],
+  "spring boot": ["spring boot", "springboot"],
+  javascript: ["javascript", "js"],
+  nodejs: ["node.js", "nodejs", "node js"],
+  express: ["express.js", "expressjs", "express"],
+  react: ["react.js", "reactjs", "react"],
+  mongodb: ["mongodb", "mongo db"],
+  mysql: ["mysql"],
+  postgresql: ["postgresql", "postgres"],
+  redis: ["redis"],
+  kafka: ["apache kafka", "kafka"],
+  docker: ["docker"],
+  kubernetes: ["kubernetes", "k8s"],
+  aws: ["amazon web services", "aws"],
+  git: ["github", "git"],
+  python: ["python"],
+  "c++": ["c++", "cpp"],
+  sql: ["sql"],
+  rest: ["rest api", "restful", "rest"],
+  microservices: ["microservices", "micro services"]
+};

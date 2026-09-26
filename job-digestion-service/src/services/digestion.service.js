@@ -56,12 +56,14 @@ export function digestRawJob(event) {
   const company = cleanText(raw.company || "");
   const description = cleanText(raw.description || "");
   const applyUrl = safeString(event.sourceUrl);
+  const source = safeString(event.source)?.toUpperCase();
+  const sourceJobId = safeString(event.sourceJobId);
 
-  if (!event.source) {
+  if (!source) {
     return { accepted: false, reason: "MISSING_SOURCE" };
   }
 
-  if (!event.sourceJobId) {
+  if (!sourceJobId) {
     return { accepted: false, reason: "MISSING_SOURCE_JOB_ID" };
   }
 
@@ -69,17 +71,33 @@ export function digestRawJob(event) {
     return { accepted: false, reason: "MISSING_TITLE" };
   }
 
+  if (!description) {
+    return { accepted: false, reason: "MISSING_DESCRIPTION" };
+  }
+
+
   if (!applyUrl) {
     return { accepted: false, reason: "MISSING_APPLY_URL" };
+  }
+
+  let parsedApplyUrl;
+  try {
+    parsedApplyUrl = new URL(applyUrl);
+  } catch {
+    return { accepted: false, reason: "INVALID_APPLY_URL" };
+  }
+
+  if (!["http:", "https:"].includes(parsedApplyUrl.protocol)) {
+    return { accepted: false, reason: "INVALID_APPLY_URL" };
   }
 
   const experience = extractExperience(title, description);
 
   const cleanedJob = {
     schemaVersion: 1,
-    externalId: String(event.sourceJobId),
-    source: event.source,
-    sourceUrl: applyUrl,
+    externalId: sourceJobId,
+    source,
+    sourceUrl: parsedApplyUrl.toString(),
     title,
     company: company || "Unknown",
     description,

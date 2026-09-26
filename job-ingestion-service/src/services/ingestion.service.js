@@ -19,10 +19,15 @@ export async function runIngestion() {
     searches: 0,
     fetched: 0,
     published: 0,
-    failedSearches: 0
+    failedSearches: 0,
+    errors: []
   };
 
   try {
+     if (!env.adzuna.appId || !env.adzuna.appKey) {
+      throw new Error("Adzuna credentials are not configured");
+    }
+
     for (const keyword of env.keywords) {
       for (const location of env.locations) {
         stats.searches++;
@@ -41,10 +46,10 @@ export async function runIngestion() {
           console.log(`[ingestion] ${keyword} @ ${location}: ${jobs.length} jobs`);
         } catch (error) {
           stats.failedSearches++;
-
+          stats.errors.push({ keyword, location });
           console.error(
             `[ingestion] failed: ${keyword} @ ${location}`,
-            error.response?.data || error.message
+            error.response?.status || error.code || "request failed"
           );
         }
       }

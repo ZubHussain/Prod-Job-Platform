@@ -21,12 +21,22 @@ router.post("/run", async (req, res) => {
 
   try {
     const result = await runIngestion();
-    res.json({ success: true, result });
+    if (result.skipped) {
+      return res.status(409).json({ success: false, result });
+    }
+
+    const success = result.failedSearches === 0;
+    res.status(success ? 200 : 207).json({ success, result });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({
+    const missingProviderCredentials =
+    env.adzuna.appId || !env.adzuna.appKey;
+
+    console.error("[ingestion] run failed", error.message);
+    res.status(missingProviderCredentials ? 503 : 500).json({
       success: false,
-      message: "Job ingestion failed"
+     message: missingProviderCredentials
+        ? "Adzuna credentials are not configured"
+        : "Job ingestion failed"
     });
   }
 });

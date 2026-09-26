@@ -116,10 +116,11 @@ services:
     build: ./job-ingestion-service
     env_file:
       - ./job-ingestion-service/.env
+    network_mode: host
+    environment:
+      KAFKA_BROKERS: localhost:9092
     depends_on:
       - kafka
-    ports:
-      - "5007:5007"
     restart: unless-stopped
 
   job-digestion-service:

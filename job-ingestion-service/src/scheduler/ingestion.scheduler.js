@@ -3,6 +3,11 @@ import { env } from "../config/env.js";
 import { runIngestion } from "../services/ingestion.service.js";
 
 export function startIngestionScheduler() {
+  if (!env.adzuna.appId || !env.adzuna.appKey) {
+    console.warn("[scheduler] disabled: Adzuna credentials are not configured");
+    return;
+  }
+  
   cron.schedule(
     env.scheduler.cron,
     async () => {

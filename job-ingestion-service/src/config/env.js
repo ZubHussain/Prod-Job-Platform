@@ -43,13 +43,11 @@ export const env = {
 };
 
 export function validateEnv() {
-  const missing = [];
+  if (!env.ingestApiKey) {
+    throw new Error("Missing environment variable: INGEST_API_KEY");
+  }
 
-  if (!env.adzuna.appId) missing.push("ADZUNA_APP_ID");
-  if (!env.adzuna.appKey) missing.push("ADZUNA_APP_KEY");
-  if (!env.ingestApiKey) missing.push("INGEST_API_KEY");
-
-  if (missing.length) {
-    throw new Error(`Missing environment variables: ${missing.join(", ")}`);
+  if (!Number.isInteger(env.adzuna.resultsPerPage) || env.adzuna.resultsPerPage < 1) {
+    throw new Error("ADZUNA_RESULTS_PER_PAGE must be a positive integer");
   }
 }

@@ -11,7 +11,7 @@ export async function startRawJobConsumer() {
 
   await consumer.subscribe({
     topic: env.kafka.rawTopic,
-    fromBeginning: false
+    fromBeginning: true
   });
 
   console.log(`[consumer] subscribed to ${env.kafka.rawTopic}`);

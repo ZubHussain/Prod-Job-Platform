@@ -3,7 +3,7 @@ import express from "express";
 import cors from "cors";
 import { connectDB } from "./config/db.js";
 import { connectKafka, cleanJobConsumer, producer } from "./config/kafka.js";
-import { startCleanJobConsumer } from "./consumers/clean-job.consumer.js";
+import { startCleanJobConsumer } from "./consumers/cleaned-job.consumer.js";
 import { redis } from "./config/redis.js";
 import jobRoutes from "./routes/jobRoutes.js";
 import mongoose from "mongoose";

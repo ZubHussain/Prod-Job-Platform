@@ -1,0 +1,135 @@
+services:
+  - type: pserv
+    name: jobnova-kafka
+    runtime: docker
+    plan: starter
+    dockerfilePath: ./kafka-broker/Dockerfile
+    dockerContext: ./kafka-broker
+    disk:
+      name: kafka-data
+      mountPath: /var/lib/kafka/data
+      sizeGB: 1
+    envVars:
+      - key: KAFKA_ADVERTISED_HOST
+        fromService:
+          type: pserv
+          name: jobnova-kafka
+          property: host
+
+  - type: web
+    name: job-ingestion-service
+    runtime: docker
+    plan: starter
+    dockerfilePath: ./job-ingestion-service/Dockerfile
+    dockerContext: ./job-ingestion-service
+    healthCheckPath: /health
+    envVars:
+      - key: KAFKA_BROKERS
+        fromService:
+          type: pserv
+          name: jobnova-kafka
+          property: host
+      - key: INGEST_API_KEY
+        sync: false
+      - key: ADZUNA_APP_ID
+        sync: false
+      - key: ADZUNA_APP_KEY
+        sync: false
+
+  - type: web
+    name: job-digestion-service
+    runtime: docker
+    plan: starter
+    dockerfilePath: ./job-digestion-service/Dockerfile
+    dockerContext: ./job-digestion-service
+    healthCheckPath: /health
+    envVars:
+      - key: KAFKA_BROKERS
+        fromService:
+          type: pserv
+          name: jobnova-kafka
+          property: host
+
+  - type: web
+    name: auth-service
+    runtime: docker
+    plan: starter
+    dockerfilePath: ./auth-service/Dockerfile
+    dockerContext: ./auth-service
+    healthCheckPath: /health
+    envVars:
+      - key: KAFKA_BROKERS
+        fromService:
+          type: pserv
+          name: jobnova-kafka
+          property: host
+      - key: MONGO_URI
+        sync: false
+      - key: JWT_SECRET
+        sync: false
+
+  - type: web
+    name: user-service
+    runtime: docker
+    plan: starter
+    dockerfilePath: ./user-service/Dockerfile
+    dockerContext: ./user-service
+    healthCheckPath: /health
+    envVars:
+      - key: KAFKA_BROKERS
+        fromService:
+          type: pserv
+          name: jobnova-kafka
+          property: host
+      - key: MONGO_URI
+        sync: false
+
+  - type: web
+    name: job-service
+    runtime: docker
+    plan: starter
+    dockerfilePath: ./job-service/Dockerfile
+    dockerContext: ./job-service
+    healthCheckPath: /health
+    envVars:
+      - key: KAFKA_BROKERS
+        fromService:
+          type: pserv
+          name: jobnova-kafka
+          property: host
+      - key: MONGO_URI
+        sync: false
+      - key: REDIS_URL
+        sync: false
+
+  - type: web
+    name: application-service
+    runtime: docker
+    plan: starter
+    dockerfilePath: ./application-service/Dockerfile
+    dockerContext: ./application-service
+    healthCheckPath: /health
+    envVars:
+      - key: KAFKA_BROKERS
+        fromService:
+          type: pserv
+          name: jobnova-kafka
+          property: host
+      - key: MONGO_URI
+        sync: false
+
+  - type: web
+    name: notification-service
+    runtime: docker
+    plan: starter
+    dockerfilePath: ./notification-service/Dockerfile
+    dockerContext: ./notification-service
+    healthCheckPath: /health
+    envVars:
+      - key: KAFKA_BROKERS
+        fromService:
+          type: pserv
+          name: jobnova-kafka
+          property: host
+      - key: MONGO_URI
+        sync: false

@@ -2,7 +2,12 @@ import { Kafka } from "kafkajs";
 import Notification from "../models/Notification.js";
 import { sendMail } from "./mailer.js";
 
-const kafka = new Kafka({ clientId: "notification-service", brokers: (process.env.KAFKA_BROKERS || "localhost:9092").split(",") });
+const brokers = (process.env.KAFKA_BROKERS || "localhost:9092")
+  .split(",")
+  .map(broker => broker.trim())
+  .filter(Boolean)
+  .map(broker => /:\d+$/u.test(broker) ? broker : `${broker}:9092`);
+const kafka = new Kafka({ clientId: "notification-service", brokers });
 const consumer = kafka.consumer({ groupId: "notification-service-group" });
 
 export async function startConsumer() {

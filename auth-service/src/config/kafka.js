@@ -1,5 +1,13 @@
 import { Kafka } from "kafkajs";
-const kafka = new Kafka({ clientId: "auth-service", brokers: (process.env.KAFKA_BROKERS || "localhost:9092").split(",") });
+
+const brokers = (process.env.KAFKA_BROKERS || "localhost:9092")
+  .split(",")
+  .map(broker => broker.trim())
+  .filter(Boolean)
+  .map(broker => /:\d+$/u.test(broker) ? broker : `${broker}:9092`);
+
+const kafka = new Kafka({ clientId: "auth-service", brokers });
+
 export const producer = kafka.producer();
 export async function connectKafka() {
   try { await producer.connect(); console.log("Auth Kafka connected"); }

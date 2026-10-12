@@ -57,6 +57,8 @@ services:
     ports:
       - "4001:4001"
     env_file: ./auth-service/.env.example
+    environment:
+      KAFKA_BROKERS: kafka:29092
     depends_on:
       kafka:
         condition: service_healthy
@@ -66,6 +68,8 @@ services:
     ports:
       - "4002:4002"
     env_file: ./user-service/.env.example
+    environment:
+      KAFKA_BROKERS: kafka:29092
     depends_on:
       kafka:
         condition: service_healthy
@@ -75,6 +79,8 @@ services:
     ports:
       - "4003:4003"
     env_file: ./job-service/.env.example
+    environment:
+      KAFKA_BROKERS: kafka:29092
     depends_on:
       kafka:
         condition: service_healthy
@@ -86,6 +92,8 @@ services:
     ports:
       - "4004:4004"
     env_file: ./application-service/.env.example
+    environment:
+      KAFKA_BROKERS: kafka:29092
     depends_on:
       kafka:
         condition: service_healthy
@@ -101,6 +109,8 @@ services:
     ports:
       - "4006:4006"
     env_file: ./notification-service/.env.example
+    environment:
+      KAFKA_BROKERS: kafka:29092
     depends_on:
       kafka:
         condition: service_healthy
@@ -116,19 +126,24 @@ services:
     build: ./job-ingestion-service
     env_file:
       - ./job-ingestion-service/.env
-    network_mode: host
     environment:
-      KAFKA_BROKERS: localhost:9092
+      KAFKA_BROKERS: kafka:29092
+    ports:
+      - "5007:5007"
     depends_on:
-      - kafka
+      kafka:
+        condition: service_healthy
     restart: unless-stopped
 
   job-digestion-service:
     build: ./job-digestion-service
     env_file:
       - ./job-digestion-service/.env
+    environment:
+      KAFKA_BROKERS: kafka:29092
     depends_on:
-      - kafka
+      kafka:
+        condition: service_healthy
     ports:
       - "5008:5008"
     restart: unless-stopped

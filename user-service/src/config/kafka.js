@@ -1,6 +1,12 @@
 import { Kafka } from "kafkajs";
 import Profile from "../models/Profile.js";
-const kafka = new Kafka({ clientId: "user-service", brokers: (process.env.KAFKA_BROKERS || "localhost:9092").split(",") });
+const brokers = (process.env.KAFKA_BROKERS || "localhost:9092")
+  .split(",")
+  .map(broker => broker.trim())
+  .filter(Boolean)
+  .map(broker => /:\d+$/u.test(broker) ? broker : `${broker}:9092`);
+const kafka = new Kafka({ clientId: "user-service", brokers });
+
 const consumer = kafka.consumer({ groupId: "user-service-group" });
 
 export async function startUserConsumer() {

@@ -1,11 +1,16 @@
 import { Kafka } from "kafkajs";
+
+const brokers = (process.env.KAFKA_BROKERS || "localhost:9092")
+  .split(",")
+  .map(broker => broker.trim())
+  .filter(Boolean)
+  .map(broker => /:\d+$/u.test(broker) ? broker : `${broker}:9092`);
+
 const kafka = new Kafka({
   clientId: "job-service",
-  brokers: (process.env.KAFKA_BROKERS || "localhost:9092")
-    .split(",")
-    .map(broker => broker.trim())
-    .filter(Boolean)
+  brokers
 });
+
 export const producer = kafka.producer();
 export const cleanJobConsumer = kafka.consumer({
   groupId: process.env.KAFKA_CLEAN_GROUP_ID || "job-service-cleaned-v1"
